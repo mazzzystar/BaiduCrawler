@@ -70,8 +70,8 @@ def extract_all_text(keyword_dict, keyword_text):
     Extract all text of elements in company dict
     There are 3 strategies:
         1. Every time appears "download timeout", I will choose another proxy.
-        2. Every 200 times after we crawl, change a proxy.
-        3. Every 2000,0 times after we crawl, Re-construct an ip_pool.
+        2. Every 200 times after I crawl, change a proxy.
+        3. Every 2000,0 times after I crawl, Re-construct an ip_pool.
 
     ========================================================
     Parameters

@@ -53,6 +53,7 @@ def get_all_ip(page):
 
 # Use http://lwons.com/wx to test if the server is available.
 def get_valid_proxies(proxies, timeout):
+    # You may change the url by yourself if it didn't work.
     url = 'http://lwons.com/wx'
     results = []
     for p in proxies:

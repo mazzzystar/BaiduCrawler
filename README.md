@@ -8,6 +8,6 @@ A crawler crawling baidu searching results by means of constantly changing proxi
 ###爬取策略
 
 有3个策略：
-   *1. 每当出现download_error，更换一个IP
-   *2. 每爬取200条文本，更换一个IP
-   *3. 每爬取20,000次，更新一次IP资源池
+   * 1. 每当出现download_error，更换一个IP
+   * 2. 每爬取200条文本，更换一个IP
+   * 3. 每爬取20,000次，更新一次IP资源池

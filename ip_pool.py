@@ -94,7 +94,8 @@ def get_the_best(round, proxies, timeout, sleeptime):
         print '\n'
         print ">>>>>>>Round\t"+str(i+1)+"<<<<<<<<<<"
         proxies = get_valid_proxies(proxies, timeout)
-        time.sleep(sleeptime)
+        if i != round-1:
+            time.sleep(sleeptime)
     return proxies
 
 

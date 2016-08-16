@@ -65,7 +65,7 @@ def get_valid_proxies(proxies, timeout):
             end = time.time()
             if r.text == 'default':
                 succeed = True
-        except Exception, e:
+        except Exception as e:
             print 'error:', p
             succeed = False
         if succeed:

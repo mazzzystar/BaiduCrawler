@@ -5,6 +5,11 @@ A crawler crawling baidu searching results by means of constantly changing proxi
 
 ![](https://github.com/fancoo/BaiduCrawler/blob/master/images/git.png)
 
+###获取代理ip策略
+
+* 1. 抓取页面上全部[ip:port]对，并检测可用性（有的代理ip是连不通的）。
+* 2. 使用“多轮检测”策略，即每个ip要经历N轮，每间隔duration在进行连通一次，因此N轮下来，存活的ip须满足：每次都在timeout以内连通。
+
 ###爬取策略
 
 有3个策略：

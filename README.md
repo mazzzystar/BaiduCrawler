@@ -8,7 +8,7 @@ A crawler crawling baidu searching results by means of constantly changing proxi
 ###获取代理ip策略
 
 * 1. 抓取页面上全部[ip:port]对，并检测可用性（有的代理ip是连不通的）。
-* 2. 使用“多轮检测”策略，即每个ip要经历N轮，每间隔duration再次尝试连通一次。因此N轮下来，存活的ip须满足：每次都在timeout范围以内连通。
+* 2. 使用"多轮检测"策略，即每个ip要经历N轮，间隔为duration连接测试，每轮都会丢弃连接时间超过timeout的ip。N轮下来，存活的ip都是每次都在timeout范围以内连通的，从而避免了"辉煌的15分钟"效应。
 
 ###爬取策略
 

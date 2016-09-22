@@ -79,9 +79,9 @@ def get_valid_proxies(proxies, timeout):
 def get_the_best(round, proxies, timeout, sleeptime):
     """
     ========================================================
-    With the strategy of N round test to find those secure
-    and stable ip. During each round it will sleep a while to
-    avoid a 'famous 15 minutes"
+    With a strategy of N round test to find secure and stable 
+    ip, during each round it will sleep a period of time to 
+    avoid the 'famous 15 minutes".
     ========================================================
     Parameters
     ----------

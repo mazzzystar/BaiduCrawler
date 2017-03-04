@@ -17,9 +17,12 @@ A crawler crawling baidu searching results by means of constantly changing proxi
    * 2. 每爬取200条文本，更换一个IP
    * 3. 每爬取20,000次，更新一次IP资源池
   
-上述参数均可手动调整
+上述参数均可手动调整。
+目前ip池的使用都是一次性的，如果想进一步建设、保存优质ip，可参考我的另一个项目[Proxy](https://github.com/fancoo/Proxy),它是一个代理ip抓取测试评估存储一体化工具，也许可以帮到你。
+
 
 ###TODO
 
 * 1. 对因网络原因未爬取的词进行二次爬取，直到达到用户指定的爬取率
-* 2. 对爬取速度快的优质ip增加权重，从而形成一个具有优先级的ip池
+* 2. 对爬取速度快的优质ip增加权重，从而形成一个具有优先级的ip池  
+

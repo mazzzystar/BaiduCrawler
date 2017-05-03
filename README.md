@@ -5,12 +5,12 @@ A crawler crawling baidu searching results by means of constantly changing proxi
 
 ![](https://github.com/fancoo/BaiduCrawler/blob/master/images/git.png)
 
-###获取代理ip策略
+### 获取代理ip策略
 
 * 1. 抓取页面上全部[ip:port]对，并检测可用性（有的代理ip是连不通的）。
 * 2. 使用"多轮检测"策略，即每个ip要经历N轮，间隔为duration连接测试，每轮都会丢弃连接时间超过timeout的ip。N轮下来，存活的ip都是每次都在timeout范围以内连通的，从而避免了"辉煌的15分钟"效应。
 
-###爬取策略
+### 爬取策略
 
 有3个策略：
    * 1. 每当出现download_error，更换一个IP
@@ -21,7 +21,7 @@ A crawler crawling baidu searching results by means of constantly changing proxi
 目前ip池的使用都是一次性的，如果想进一步建设、保存优质ip，可参考我的另一个项目[Proxy](https://github.com/fancoo/Proxy),它是一个代理ip抓取测试评估存储一体化工具，也许可以帮到你。
 
 
-###TODO
+### TODO
 
 * 1. 对因网络原因未爬取的词进行二次爬取，直到达到用户指定的爬取率
 * 2. 对爬取速度快的优质ip增加权重，从而形成一个具有优先级的ip池  

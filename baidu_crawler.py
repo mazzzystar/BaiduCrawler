@@ -4,6 +4,7 @@ import requests
 from lxml import etree
 import random
 import ip_pool
+import config as cfg
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -56,7 +57,7 @@ def html_parser(html):
     text = [line.strip() for line in results]
     text_str = ''
     if len(text) == 0:
-        print "No!"
+        print "error, no data!"
     else:
         for i in text:
             i = i.strip()
@@ -84,7 +85,7 @@ def extract_all_text(keyword_dict, keyword_text):
     """
 
     cn = open(keyword_dict, 'r')
-    print ">>>>>read success<<<"
+    print ">>>>>start to get proxies<<<"
     with open(keyword_text, 'w') as ct:
         flag = 0  # Change ip
         switch = 0  # Change the proxies list
@@ -93,17 +94,17 @@ def extract_all_text(keyword_dict, keyword_text):
         for line in cn:
             if switch % 20000 == 0:
                 switch = 1
-                ip_list = ip_pool.get_all_ip(1)
-                useful_proxies = ip_pool.get_the_best(1, ip_list, 1.5, 20)
+                ip_list = ip_pool.get_all_ip(cfg.page_num)
+                useful_proxies = ip_pool.get_the_best(cfg.examine_round, ip_list, cfg.timeout, cfg.sleep_time)
             switch += 1
             try:
-                if flag % 200 == 0 and len(useful_proxies) != 0:
+                if flag % cfg.n == 0 and len(useful_proxies) != 0:
                     flag = 1
                     rd = random.randint(0, len(useful_proxies)-1)
                     new_ip = useful_proxies[rd]
-                    print new_ip
+                    print "change proxies: " + new_ip
                 flag += 1
-                proxy = {'http': 'http://'+new_ip}
+                proxy = new_ip
                 content = download_html(line, proxy)
                 raw_text = html_parser(content)
                 raw_text = raw_text.replace('\n', ' ')

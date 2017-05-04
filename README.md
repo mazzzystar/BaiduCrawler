@@ -34,7 +34,7 @@ pip install beautifulsoup4
 
 git clone https://github.com/fancoo/BaiduCrawler
 cd BaiduCrawler
-
+python baidu_crawler.py
 ```
 
 

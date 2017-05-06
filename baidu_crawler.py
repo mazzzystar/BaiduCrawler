@@ -51,18 +51,33 @@ def html_parser(html):
     times: the times that key word hits.
 
     """
-    path = "//div[@id='content_left']//div[@class='c-abstract']/text()"  # Xpath of abstract in BaiDu search results
+    path_cn = "//div[@id='content_left']//div[@class='c-abstract']/text()"  # Xpath of abstract in BaiDu search results
+    path_en = "//div[@id='content_left']//div[@class='c-abstract c-abstract-en']/text()"  # Xpath of abstract in BaiDu search results
     tree = etree.HTML(html)
-    results = tree.xpath(path)
-    text = [line.strip() for line in results]
+    results_cn = tree.xpath(path_cn)
+    results_en = tree.xpath(path_en)
+    text_cn = [line.strip() for line in results_cn]
+    text_en = [line.strip() for line in results_en]
     text_str = ''
-    if len(text) == 0:
+    if len(text_cn) == 0 and len(text_en) == 0:
         print "error, no data!"
     else:
-        for i in text:
-            i = i.strip()
-            text_str += i
+        if len(text_cn):
+            for i in text_cn:
+                i = i.strip()
+                text_str += i
+
+        if len(text_en):
+            for i in text_en:
+                i = i.strip()
+                text_str += i
     return text_str
+
+
+def get_proxies():
+    ip_list = ip_pool.get_all_ip(cfg.page_num)
+    useful_proxies = ip_pool.get_the_best(cfg.examine_round, ip_list, cfg.timeout, cfg.sleep_time)
+    return useful_proxies
 
 
 def extract_all_text(keyword_dict, keyword_text):
@@ -94,9 +109,12 @@ def extract_all_text(keyword_dict, keyword_text):
         for line in cn:
             if switch % 20000 == 0:
                 switch = 1
-                ip_list = ip_pool.get_all_ip(cfg.page_num)
-                useful_proxies = ip_pool.get_the_best(cfg.examine_round, ip_list, cfg.timeout, cfg.sleep_time)
-            switch += 1
+                try:
+                    useful_proxies = get_proxies()
+                    switch += 1
+                except Exception:
+                    useful_proxies = get_proxies()  # once again
+                    switch += 1
             try:
                 if flag % cfg.n == 0 and len(useful_proxies) != 0:
                     flag = 1
@@ -113,6 +131,11 @@ def extract_all_text(keyword_dict, keyword_text):
             except Exception, e:
                 rd = random.randint(0, len(useful_proxies)-1)
                 new_ip = useful_proxies[rd]
+                content = download_html(line, new_ip)
+                raw_text = html_parser(content)
+                raw_text = raw_text.replace('\n', ' ')
+                print raw_text
+                ct.write(line.strip()+'\t'+raw_text+'\n')
                 print 'download error: ', e
     ct.close()
     cn.close()

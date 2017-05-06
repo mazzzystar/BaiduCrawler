@@ -4,14 +4,14 @@
 page_num = 1
 
 # 对已经检测成功的ip测试轮次。普通爬虫服务设置1轮足矣，若希望减少抓取数据缺失，可适当提高轮次，然而可能ip也将更少。
-examine_round = 1
+examine_round = 2
 
 # 超时时间。代理ip在测试过程中的超时时间。
 timeout = 1.5
 
 # 每轮测试之间的间隔时间。
-sleep_time = 20
+sleep_time = 10
 
 # 每爬取n条数据切换一次代理ip
-n = 50
+n = 20
 

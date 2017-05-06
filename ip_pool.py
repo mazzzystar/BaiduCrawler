@@ -80,11 +80,13 @@ def get_all_ip(page):
     # get proxies on 66ip
     for i in range(page):
         cur_ip_list = get_66ip(i+1)
+        time.sleep(0.5)
         for item in cur_ip_list:
             ip_list.append(item)
     # get proxies on xici
     for i in range(page):
         cur_ip_list = get_xici(i+1)
+        time.sleep(0.5)
         for item in cur_ip_list:
             ip_list.append(item)
 

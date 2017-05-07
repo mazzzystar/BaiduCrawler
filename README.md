@@ -25,6 +25,7 @@ A crawler crawling baidu searching results by means of constantly changing proxi
 
 * 1. 对因网络原因未爬取的词进行二次爬取，直到达到用户指定的爬取率
 * 2. 对爬取速度快的优质ip增加权重，从而形成一个具有优先级的ip池
+* 3. ip评估改写成多线程
 
 ### 使用
 ```bash

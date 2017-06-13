@@ -32,6 +32,7 @@ def download_html(keywords, proxy):
     """
     key = {'wd': keywords}
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko'}
+    proxy = {'http': 'http://'+proxy}
     web_content = requests.get("http://www.baidu.com/s?", params=key, headers=headers, proxies=proxy, timeout=4)
     content = web_content.text
     return content

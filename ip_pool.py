@@ -68,6 +68,7 @@ def get_xici(page):
                 # Match each ip with it's port
                 full_ip = ip[i]+":"+port[i]
                 print full_ip
+		ip_list.append(full_ip)
         return ip_list
     except Exception, e:
             print 'get proxies error: ', e

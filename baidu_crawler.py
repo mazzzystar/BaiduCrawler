@@ -15,138 +15,115 @@ sys.setdefaultencoding('utf-8')
 ================================================
 """
 
-
+#抓取数据
 def download_html(keywords, proxy):
-    """
-    download html
-
-    Parameters
-    ---------
-    keywords: keywords need to be search.
-    proxy: an ip with port.
-
-    Returns
-    ------
-    utf8_content: the web content encode in utf-8.
-
-    """
+    #抓取参数 https://www.baidu.com/s?wd=testRequest
     key = {'wd': keywords}
-    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko'}
+    
+    #请求Header
+    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0 cb) like Gecko'}
+    
+    #请求代理
     proxy = {'http': 'http://'+proxy}
-    web_content = requests.get("http://www.baidu.com/s?", params=key, headers=headers, proxies=proxy, timeout=4)
-    content = web_content.text
-    return content
 
+    #抓取数据内容
+    web_content = requests.get("https://www.baidu.com/s?", params=key, headers=headers, proxies=proxy, timeout=4)
 
+    return web_content.text
+
+#解析html
 def html_parser(html):
-    """
-    web parser
+    #设置提取数据正则
+    path_cn = "//div[@id='content_left']//div[@class='c-abstract']/text()"
+    path_en = "//div[@id='content_left']//div[@class='c-abstract c-abstract-en']/text()"
 
-    Parameters
-    ----------
-    html: the web html.
+    #提取数据
+    tree	= etree.HTML(html)
+    results_cn	= tree.xpath(path_cn)
+    results_en	= tree.xpath(path_en)
+    text_cn	= [line.strip() for line in results_cn]
+    text_en	= [line.strip() for line in results_en]
 
-    Returns
-    -------
-    text: the whole text of the search results.
-    times: the times that key word hits.
+    #设置返回结果
+    text_str	= []
 
-    """
-    path_cn = "//div[@id='content_left']//div[@class='c-abstract']/text()"  # Xpath of abstract in BaiDu search results
-    path_en = "//div[@id='content_left']//div[@class='c-abstract c-abstract-en']/text()"  # Xpath of abstract in BaiDu search results
-    tree = etree.HTML(html)
-    results_cn = tree.xpath(path_cn)
-    results_en = tree.xpath(path_en)
-    text_cn = [line.strip() for line in results_cn]
-    text_en = [line.strip() for line in results_en]
-    text_str = ''
-    if len(text_cn) == 0 and len(text_en) == 0:
-        print "error, no data!"
-    else:
+    #提取数据
+    if len(text_cn) != 0 or len(text_en) != 0:
+	#提取中文
         if len(text_cn):
             for i in text_cn:
-                i = i.strip()
-                text_str += i
+	    	text_str.append(i.strip())
 
-        if len(text_en):
+        #提取英文
+        if len(text_en) != 0:
             for i in text_en:
-                i = i.strip()
-                text_str += i
+	    	text_str.append(i.strip())
+ 
+    #返回结果
     return text_str
 
-
+#获取代理数据
 def get_proxies():
-    ip_list = ip_pool.get_all_ip(cfg.page_num)
+    #获取代理数据
+    return ip_pool.get_proxies()
+    return ['202.108.2.42:80','153.36.35.183:808']
+
+    #设置抓取页数
+    dataPageNum = cfg.page_num
+
+    #抓取可用的IP数据
+    ip_list = ip_pool.get_all_ip(dataPageNum)
+
+    #验证代理IP是否可用
     useful_proxies = ip_pool.get_the_best(cfg.examine_round, ip_list, cfg.timeout, cfg.sleep_time)
+
+    #返回可用的代理数据
     return useful_proxies
 
-
+#抓取数据
 def extract_all_text(keyword_dict, keyword_text):
-    """
-    ========================================================
-    Extract all text of elements in company dict
-    There are 3 strategies:
-        1. Every time appears "download timeout", I will choose another proxy.
-        2. Every 200 times after I crawl, change a proxy.
-        3. Every 2000,0 times after I crawl, Re-construct an ip_pool.
-
-    ========================================================
-    Parameters
-    ---------
-    keyword_dict: the keyword name dict.
-    keyword_text: file that save all text.
-
-    Return
-    ------
-    """
-
+    #读取要抓取的关键词
     cn = open(keyword_dict, 'r')
-    print ">>>>>start to get proxies<<<"
+
+    #逐行行读取关键字抓取数据
     with open(keyword_text, 'w') as ct:
-        flag = 0  # Change ip
-        switch = 0  # Change the proxies list
-        useful_proxies = []
-        new_ip = ''
-        for line in cn:
-            if switch % 20000 == 0:
-                switch = 1
-                try:
-                    useful_proxies = get_proxies()
-                    switch += 1
-                except Exception:
-                    useful_proxies = get_proxies()  # once again
-                    switch += 1
-            try:
-                if flag % cfg.n == 0 and len(useful_proxies) != 0:
-                    flag = 1
-                    rd = random.randint(0, len(useful_proxies)-1)
-                    new_ip = useful_proxies[rd]
-                    print "change proxies: " + new_ip
-                flag += 1
-                proxy = new_ip
-                content = download_html(line, proxy)
-                raw_text = html_parser(content)
-                raw_text = raw_text.replace('\n', ' ')
-                print raw_text
-                ct.write(line.strip()+'\t'+raw_text+'\n')
-            except Exception, e:
-                rd = random.randint(0, len(useful_proxies)-1)
-                new_ip = useful_proxies[rd]
-                content = download_html(line, new_ip)
-                raw_text = html_parser(content)
-                raw_text = raw_text.replace('\n', ' ')
-                print raw_text
-                ct.write(line.strip()+'\t'+raw_text+'\n')
-                print 'download error: ', e
+        #获取代理IP数据
+        useful_proxies = get_proxies()
+	#useful_proxies = ['202.108.2.42:80','153.36.35.183:808']
+
+        #输出代理数据情况
+        print "总共：", len(useful_proxies),'IP可用'
+
+	#逐行读取关键词
+	for line in cn:
+		#设置随机代理
+		rd	= random.randint(0, len(useful_proxies)-1)
+		proxy	= useful_proxies[rd]
+        	print "change proxies: " + proxy
+ 
+		#抓取数据
+		content	= download_html(line, proxy)
+		raw_text= html_parser(content)
+		raw_text= (' |-| '.join(raw_text)).replace('\n', ' ')
+		print raw_text
+
+		#写入数据到文件
+		ct.write(line.strip()+':\t'+raw_text+'\n')
+
+    #关闭文件句柄
     ct.close()
     cn.close()
 
-
+#入口方法
 def main():
-    keyword_dict = 'data/samples.txt'
-    keyword_text = 'data/results.txt'
+    #抓取搜索关键词
+    keyword_dict	= 'data/samples.txt'
+
+    #抓取存取结果
+    keyword_text	= 'data/results.txt'
+
+    #抓取数据
     extract_all_text(keyword_dict, keyword_text)
 
 if __name__ == '__main__':
     main()
-

@@ -47,3 +47,7 @@ python baidu_crawler.py
 
 ### 2017/6/13更新
  * 新增抓取的代理IP数据存到MySql中 下次先从库中读取 再从网站抓取
+
+### 2017/6/18更新
+ * 修改了部分[BoBoGithub](https://github.com/BoBoGithub)提交的PR，并重构了[ip_pool](https://github.com/fancoo/BaiduCrawler/blob/master/ip_pool.py)的代码。
+ * 目前这个版本其实只将有效ip保存到数据库，没能实现ip质量评优以及爬取的多线程，因时间精力有限，考虑未来再加入。

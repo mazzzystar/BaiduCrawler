@@ -37,7 +37,7 @@ pip install beautifulsoup4
 git clone https://github.com/fancoo/BaiduCrawler
 cd BaiduCrawler
 ```
-Python 3以下可直接运行
+#### Python 2.7
 ```bash
 python baidu_crawler.py
 ```
@@ -61,3 +61,7 @@ python baidu_crawler.py
 ### 2017/6/18更新
  * 修改了部分[BoBoGithub](https://github.com/BoBoGithub)提交的PR，并重构了[ip_pool.py](https://github.com/fancoo/BaiduCrawler/blob/master/ip_pool.py)的代码。
  * 目前这个版本其实只将有效ip保存到数据库，没能实现ip质量评优以及爬取的多线程，因时间精力有限，考虑未来再加入。
+
+### 2017/7/25更新
+* 增加对Python3.6的支持。
+

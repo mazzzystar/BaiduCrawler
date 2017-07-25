@@ -28,6 +28,7 @@ A crawler crawling baidu searching results by means of constantly changing proxi
 * 3. ip评估改写成多线程
 
 ### 使用
+#### 准备工作
 ```bash
 pip install requests
 pip install lxml
@@ -35,6 +36,15 @@ pip install beautifulsoup4
 
 git clone https://github.com/fancoo/BaiduCrawler
 cd BaiduCrawler
+```
+Python 3以下可直接运行
+```bash
+python baidu_crawler.py
+```
+#### Python 3
+本程序仅在win版本的Python3.6测试通过。
+```bash
+cd Py3
 python baidu_crawler.py
 ```
 

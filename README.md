@@ -1,9 +1,9 @@
-# BaiduCrawler
+# Crawler
 A crawler crawling baidu searching results by means of constantly changing proxies.
 
 爬取百度搜索结果中c-abstract里的数据，并使用不断更换代理ip的方式绕过百度反爬虫策略，从而实现对数以10w计的词条的百度搜索结果进行连续爬取。
 
-![](https://github.com/fancoo/BaiduCrawler/blob/master/images/git.png)
+![](https://github.com/fancoo/Crawler/blob/master/images/git.png)
 
 ### 获取代理ip策略
 
@@ -34,8 +34,8 @@ pip install requests
 pip install lxml
 pip install beautifulsoup4
 
-git clone https://github.com/fancoo/BaiduCrawler
-cd BaiduCrawler
+git clone https://github.com/fancoo/Crawler
+cd Crawler
 ```
 #### Python 2.7
 ```bash
@@ -59,7 +59,7 @@ python baidu_crawler.py
  * 新增抓取的代理IP数据存到MySql中 下次先从库中读取 再从网站抓取
 
 ### 2017/6/18更新
- * 修改了部分[BoBoGithub](https://github.com/BoBoGithub)提交的PR，并重构了[ip_pool.py](https://github.com/fancoo/BaiduCrawler/blob/master/ip_pool.py)的代码。
+ * 修改了部分[BoBoGithub](https://github.com/BoBoGithub)提交的PR，并重构了[ip_pool.py](https://github.com/fancoo/Crawler/blob/master/ip_pool.py)的代码。
  * 目前这个版本其实只将有效ip保存到数据库，没能实现ip质量评优以及爬取的多线程，因时间精力有限，考虑未来再加入。
 
 ### 2017/7/25更新

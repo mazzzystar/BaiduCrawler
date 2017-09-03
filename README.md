@@ -35,7 +35,7 @@ pip install lxml
 pip install beautifulsoup4
 
 git clone https://github.com/fancoo/BaiduCrawler
-cd Crawler
+cd BaiduCrawler
 ```
 #### Python 2.7
 ```bash

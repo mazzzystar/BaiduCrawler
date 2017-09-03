@@ -3,7 +3,7 @@ A crawler crawling baidu searching results by means of constantly changing proxi
 
 爬取百度搜索结果中c-abstract里的数据，并使用不断更换代理ip的方式绕过百度反爬虫策略，从而实现对数以10w计的词条的百度搜索结果进行连续爬取。
 
-![](https://github.com/fancoo/Crawler/blob/master/images/git.png)
+![](https://github.com/fancoo/BaiduCrawler/blob/master/images/git.png)
 
 ### 获取代理ip策略
 
@@ -34,7 +34,7 @@ pip install requests
 pip install lxml
 pip install beautifulsoup4
 
-git clone https://github.com/fancoo/Crawler
+git clone https://github.com/fancoo/BaiduCrawler
 cd Crawler
 ```
 #### Python 2.7

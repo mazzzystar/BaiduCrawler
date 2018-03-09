@@ -9,6 +9,9 @@ examine_round = 1
 # 超时时间。代理ip在测试过程中的超时时间。
 timeout = 1.5
 
+#如果超过这个时间就在数据库里删除
+delet_timeout = 3
+
 # 数据库链接地址
 host = '127.0.0.1'
 

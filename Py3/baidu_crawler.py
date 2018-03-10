@@ -2,7 +2,7 @@
 import requests
 from lxml import etree
 import random
-import ip_pool
+from Py3 import ip_pool
 
 
 """
@@ -93,7 +93,7 @@ def extract_all_text(keyword_dict, keyword_text, ip_factory):
                 # 超过3次则删除此proxy
                 useful_proxies[proxy] += 1
                 if useful_proxies[proxy] > 3:
-                    useful_proxies.remove(proxy)
+                    del useful_proxies[proxy]
                 # 再抓一次
                 proxy = random.choice(useful_proxies.keys())
                 content = download_html(line.strip(), proxy)
@@ -111,9 +111,9 @@ def extract_all_text(keyword_dict, keyword_text, ip_factory):
 
 def main():
     # 抓取搜索关键词
-    keyword_dict = 'data/samples.txt'
+    keyword_dict = '../data/samples.txt'
     # 抓取存取结果
-    keyword_text = 'data/results.txt'
+    keyword_text = '../data/results.txt'
 
     # 抓取数据
     extract_all_text(keyword_dict, keyword_text, ip_pool.ip_factory)

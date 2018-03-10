@@ -1,5 +1,5 @@
 # coding:utf-8
-from ..base import config as cfg
+import config as cfg
 import time
 import requests
 from lxml import etree
@@ -17,9 +17,9 @@ class IPFactory:
         self.round = cfg.examine_round
         self.timeout = cfg.timeout
         self.all_ip = set()
-
+        self.delet_timeout = cfg.delet_timeout
         # 创建数据库
-        self.create_db()
+        #self.create_db()
 
         # # 抓取全部ip
         # current_ips = self.get_all_ip()
@@ -165,7 +165,8 @@ class IPFactory:
 
         # 可用代理结果
         results = set()
-
+        # 不可用的代理
+        fail_ip = set()
         # 挨个检查代理是否可用
         for p in ip_set:
             proxy = {'http': 'http://'+p}
@@ -180,10 +181,12 @@ class IPFactory:
                     print ('succeed: ' + p + '\t' + " in " + format(end-start, '0.2f') + 's')
                     # 追加代理ip到返回的set中
                     results.add(p)
+                else:
+                    fail_ip.add(p)
             except OSError:
                 print ('timeout:', p)
 
-        return results
+        return results,fail_ip
 
     def get_the_best(self, valid_ip, timeout, round):
         """
@@ -193,7 +196,7 @@ class IPFactory:
         for i in range(round):
             print ("\n>>>>>>>\tRound\t"+str(i+1)+"\t<<<<<<<<<<")
             # 检查代理是否可用
-            valid_ip = self.get_valid_ip(valid_ip, timeout)
+            valid_ip, _ = self.get_valid_ip(valid_ip, timeout)
             # 停一下
             if i < round-1:
                 time.sleep(30)
@@ -238,6 +241,43 @@ class IPFactory:
             conn.close()
         print ("\n>>>>>>>>>>>>>>>>>>>> 代理数据入库处理 End  <<<<<<<<<<<<<<<<<<<<<<\n")
 
+    def delete_from_db(self, delet_ips):
+        """
+        从mysql数据库删除代理
+        """
+        if len(delet_ips) == 0:
+            print ("没有可删除ip。")
+            return
+        # 连接数据库
+        print ("\n>>>>>>>>>>>>>>>>>>>> 代理数据删除处理 Start  <<<<<<<<<<<<<<<<<<<<<<\n")
+        conn = mdb.connect(cfg.host, cfg.user, cfg.passwd, cfg.DB_NAME)
+        cursor = conn.cursor()
+        try:
+            for item in delet_ips:
+                # 检查表中是否存在数据
+                item_exist = cursor.execute('SELECT * FROM %s WHERE content="%s"' %(cfg.TABLE_NAME, item))
+
+                # 删除代理
+                if item_exist == 1:
+                    # 删除数据
+                    n = cursor.execute('DELETE FROM %s WHERE content="%s"' %(cfg.TABLE_NAME, item))
+                    conn.commit()
+
+                    # 输出删除状态
+                    if n:
+                        print (datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")+" "+item+" 删除成功。\n")
+                    else:
+                        print (datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")+" "+item+" 删除失败。\n")
+
+                else:
+                    print (datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")+" "+ item +" 不存在。\n")
+        except Exception as e:
+            print ("删除失败：" + str(e))
+        finally:
+            cursor.close()
+            conn.close()
+        print ("\n>>>>>>>>>>>>>>>>>>>> 代理数据删除 End  <<<<<<<<<<<<<<<<<<<<<<\n")
+
     def get_proxies(self):
         ip_list = []
 
@@ -259,7 +299,7 @@ class IPFactory:
             else:
                 # 获取代理数据
                 current_ips = self.get_all_ip()
-                valid_ips = self.get_the_best(current_ips, self.timeout, self.round)
+                valid_ips,_ = self.get_the_best(current_ips, self.timeout, self.round)
                 self.save_to_db(valid_ips)
                 ip_list.extend(valid_ips)
         except Exception as e:
@@ -269,5 +309,21 @@ class IPFactory:
             conn.close()
 
         return ip_list
-
 ip_factory = IPFactory()
+
+def ip_get_test_save(timeout,round):
+
+    ip_factory = IPFactory()
+    ips = ip_factory.get_all_ip()
+    bestIp = ip_factory.get_the_best(ips,timeout,round)
+    ip_factory.save_to_db(bestIp)
+
+def test_ip_and_delete ():
+
+    ips = ip_factory.get_proxies()
+    _,about_to_deletes = ip_factory.get_valid_ip(ips,timeout=ip_factory.timeout)
+    ip_factory.delete_from_db(about_to_deletes)
+
+if __name__ == '__main__':
+    ip_get_test_save(1.5,1)
+    #test_ip_and_delete()
